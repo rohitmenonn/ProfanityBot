@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Telegram Bot that detects hate speech",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon bot.js"
   },
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/shresthhh/ProfanityBot#readme",
   "dependencies": {
+    "dotenv": "^14.2.0",
     "telegraf": "^4.6.0"
   }
 }
