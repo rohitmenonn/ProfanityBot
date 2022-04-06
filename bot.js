@@ -113,7 +113,6 @@ bot.on("text", async (ctx) => {
     }
     await currentUser.save();
   }
-  // Using context shortcut
 });
 
 bot.launch();
