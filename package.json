@@ -4,7 +4,7 @@
   "description": "Telegram Bot that detects hate speech",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon bot.js"
+    "start": "node bot.js"
   },
   "repository": {
     "type": "git",

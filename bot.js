@@ -19,12 +19,32 @@ mongoose
 dotenv.config({ path: ".env" });
 const bot = new Telegraf(BOT_TOKEN);
 
+let prevMessageId = null;
+
+function deletePreviousMessage(prevMessageId, chatID, currentMessageID) {
+  if (prevMessageId) {
+    ctx.deleteMessage(prevMessageId, chatID).catch((e) => console.log(e));
+    console.log("Reached here");
+  }
+  prevMessageId = currentMessageID;
+}
+
 // create /start command
 bot.start((ctx) => {
   ctx.reply(`Hi ${ctx.message.from.first_name}! Welcome to Profanity Bot`);
+  deletePreviousMessage(
+    prevMessageId,
+    ctx.message.chat.id,
+    ctx.message.message_id
+  );
 });
 
 bot.on("sticker", (ctx) => ctx.reply("Don't send me stickers noob!"));
+
+bot.on("/unban", (ctx) => {
+  console.log(ctx.message);
+  ctx.reply("UNderstood");
+});
 
 /* Todo: 
 
@@ -75,8 +95,13 @@ bot.on("text", async (ctx) => {
         Banned ${currentUser.username}
         Message Deleted
         `);
+        console.log(prevMessageId);
+        deletePreviousMessage(
+          prevMessageId,
+          ctx.message.chat.id,
+          ctx.message.message_id
+        );
       }
-      console.log(Math.round(Date.now() / 1000) + 31);
       ctx.reply(`Hate Speech Detected 🚫⛔
       User: ${ctx.message.from.username}
       Number of Warnings: ${currentUser.numberWarnings}
@@ -85,6 +110,11 @@ bot.on("text", async (ctx) => {
       ctx
         .deleteMessage(ctx.message.message_id, ctx.message.chat.id)
         .catch((e) => console.log(e));
+      deletePreviousMessage(
+        prevMessageId,
+        ctx.message.chat.id,
+        ctx.message.message_id
+      );
     } else if (prediction.Prediction == "Offensive Language") {
       currentUser.numberWarnings++;
       if (currentUser.numberWarnings >= 5) {
@@ -101,6 +131,12 @@ bot.on("text", async (ctx) => {
         Banned ${currentUser.username}
         Message Deleted
         `);
+
+        deletePreviousMessage(
+          prevMessageId,
+          ctx.message.chat.id,
+          ctx.message.message_id
+        );
       }
       ctx.reply(`Abusive/Offensive Language Detected 🚫⛔
       User: ${ctx.message.from.username}
@@ -110,6 +146,12 @@ bot.on("text", async (ctx) => {
       ctx
         .deleteMessage(ctx.message.message_id, ctx.message.chat.id)
         .catch((e) => console.log(e));
+
+      deletePreviousMessage(
+        prevMessageId,
+        ctx.message.chat.id,
+        ctx.message.message_id
+      );
     }
     await currentUser.save();
   }
