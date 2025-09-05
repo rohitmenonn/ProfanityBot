@@ -21,6 +21,32 @@ Open ```Command Prompt``` or ```Windows Powershell``` and navigate to the projec
 ```bash
   npm install
 ```
+
+## Redis Configuration
+
+This bot now uses Redis streams to maintain and process messages. You'll need to set up Redis:
+
+### Local Redis Setup
+1. Install Redis on your system
+2. Start Redis server: `redis-server`
+3. The bot will connect to `redis://localhost:6379` by default
+
+### Environment Variables
+Create a `.env` file in the project root with:
+```
+REDIS_URL=redis://localhost:6379
+```
+
+For production, use a Redis cloud service:
+```
+REDIS_URL=redis://username:password@host:port
+```
+
+### Redis Streams Features
+- **Message Streaming**: All messages are automatically added to Redis streams
+- **Processing Tracking**: Messages are marked as processed with their analysis results
+- **Statistics**: Use `/streamstats` command to view stream statistics
+- **Recent Messages**: Use `/recentmessages` command to view recent messages from the stream
     
 ## Deployment
 
